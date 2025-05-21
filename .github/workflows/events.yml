@@ -3,7 +3,7 @@ name: Handle Release PR Events
 on:
   pull_request:
     branches:
-      - main
+      - master
     types:
       - opened
       - synchronize
