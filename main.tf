@@ -8,11 +8,12 @@ terraform {
 }
 
 resource "random_string" "random" {
+  count            = 3
   length           = 16
   special          = true
   override_special = "/@£$"
 }
 
 output "generated_string" {
-  value = random_string.random.id
+  value = random_string.random.*.id
 }
