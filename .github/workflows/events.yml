@@ -3,6 +3,7 @@ run-name: Run ${{ github.run_number }} triggered for ${{ github.event_name }} ev
 on:
   repository_dispatch:
     types: [demo]
+  push:
 jobs:
   dump-event:
     runs-on: ubuntu-latest
