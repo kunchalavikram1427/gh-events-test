@@ -16,4 +16,7 @@ jobs:
       run: |
         echo "GITHUB_EVENT_NAME: ${{ github.event_name }}"
     - name: Parsing client payload message
-      run: echo ${{ github.event.client_payload.message }}
+      run: |
+        echo $MESSAGE
+      env:
+        MESSAGE: ${{ github.event.client_payload.message }}
