@@ -16,18 +16,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
+      - name: Install nginx
+        run: 
+          curl -O https://nginx      
+        
       - name: Print all environment variables
+        id: test_step
         run: |
-          export x=12
-          printenv x
+          echo "X=12" >> $GITHUB_OUTPUT
+          echo "Y=12" >> $GITHUB_ENV
+          nginx -v
 
       - name: Use all environment levels
         env: # Step-level environment variable (overrides job/workflow if keys match)
           STEP_ENV: "I am set at the step level"
           JOB_ENV: "I override the job-level value"
         run: |
-          printenv x
+          echo $Y
+          echo {{ steps.test_step.outputs.X }}
           echo "WORKFLOW_ENV: $WORKFLOW_ENV"
           echo "JOB_ENV: $JOB_ENV"
           echo "STEP_ENV: $STEP_ENV"
