@@ -16,11 +16,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Install nginx
-        run: 
-          curl -O https://nginx      
-        
+               
       - name: Print all environment variables
         id: test_step
         run: |
