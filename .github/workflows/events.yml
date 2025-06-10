@@ -8,22 +8,23 @@ env: # Workflow-level environment variable
 
 jobs:
   build:
+    outputs:
+        TAG: 12
     runs-on: ubuntu-latest
-
     env: # Job-level environment variable
       JOB_ENV: "I am set at the job level"
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-               
+        uses: actions/checkout@v4        
       - name: Print all environment variables
         id: test_step
         run: |
+          # job-scope
+          echo "$WORKSPACE/bin" >> $GITHUB_PATH
+          # job-scope
           echo "X=12" >> $GITHUB_OUTPUT
-          echo "Y=12" >> $GITHUB_ENV
-          nginx -v
-
+          # job-scope
+          echo "Y=19" >> $GITHUB_ENV
       - name: Use all environment levels
         env: # Step-level environment variable (overrides job/workflow if keys match)
           STEP_ENV: "I am set at the step level"
@@ -34,3 +35,9 @@ jobs:
           echo "WORKFLOW_ENV: $WORKFLOW_ENV"
           echo "JOB_ENV: $JOB_ENV"
           echo "STEP_ENV: $STEP_ENV"
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:             
+      - name: Print tag value
+        run: echo ${{ jobs.build.outputs.TAG }}
