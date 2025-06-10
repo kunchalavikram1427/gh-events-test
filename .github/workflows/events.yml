@@ -1,23 +1,33 @@
-name: GitHub Actions repository_dispatch Demo 
-run-name: Run ${{ github.run_number }} triggered for ${{ github.event_name }} event for workflowxyz
+name: Environment Variables Example
+
 on:
-  repository_dispatch:
-    types: [demo]
   push:
+
+env: # Workflow-level environment variable
+  WORKFLOW_ENV: "I am set at the workflow level"
+
 jobs:
-  dump-event:
+  build:
     runs-on: ubuntu-latest
+
+    env: # Job-level environment variable
+      JOB_ENV: "I am set at the job level"
+
     steps:
-      - name: Dump full event payload (for debugging)
-        run: echo '${{ toJson(github.event) }}'
-  Get-Environment-Variables:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Read environment variables
-      run: |
-        echo "GITHUB_EVENT_NAME: ${{ github.event_name }}"
-    - name: Parsing client payload message
-      run: |
-        echo $MESSAGE
-      env:
-        MESSAGE: ${{ github.event.client_payload.message }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print all environment variables
+        run: |
+          export x=12
+          printenv x
+
+      - name: Use all environment levels
+        env: # Step-level environment variable (overrides job/workflow if keys match)
+          STEP_ENV: "I am set at the step level"
+          JOB_ENV: "I override the job-level value"
+        run: |
+          printenv x
+          echo "WORKFLOW_ENV: $WORKFLOW_ENV"
+          echo "JOB_ENV: $JOB_ENV"
+          echo "STEP_ENV: $STEP_ENV"
