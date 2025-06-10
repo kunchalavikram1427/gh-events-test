@@ -40,4 +40,4 @@ jobs:
     needs: build
     steps:             
       - name: Print tag value
-        run: echo ${{ jobs.build.outputs.TAG }}
+        run: echo ${{ needs.build.outputs.TAG }}
