@@ -9,7 +9,8 @@ env: # Workflow-level environment variable
 jobs:
   build:
     outputs:
-        TAG: 12
+        DOCKER_TAG: ${{ steps.test_step.outputs.TAG }}
+        DOCKER_IMAGE_NAME: ${{ steps.test_step.outputs.IMAGE_NAME }}
     runs-on: ubuntu-latest
     env: # Job-level environment variable
       JOB_ENV: "I am set at the job level"
@@ -23,6 +24,8 @@ jobs:
           echo "$WORKSPACE/bin" >> $GITHUB_PATH
           # job-scope
           echo "X=12" >> $GITHUB_OUTPUT
+          echo "TAG=v1" >> $GITHUB_OUTPUT
+          echo "IMAGE_NAME=nginxcustom" >> $GITHUB_OUTPUT
           # job-scope
           echo "Y=19" >> $GITHUB_ENV
       - name: Use all environment levels
@@ -40,4 +43,6 @@ jobs:
     needs: build
     steps:             
       - name: Print tag value
-        run: echo ${{ needs.build.outputs.TAG }}
+        run: |
+          echo ${{ needs.build.outputs.DOCKER_TAG }}
+          echo ${{ needs.build.outputs.DOCKER_IMAGE_NAME }}
